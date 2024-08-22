@@ -1,0 +1,22 @@
+# 排除 node_modules，因为 Dockerfile 中会在容器中重新安装依赖
+node_modules
+
+# 排除 .git 目录和版本控制文件
+.git
+.gitignore
+
+# 排除本地环境配置和测试文件
+*.log
+*.env
+*.test.js
+*.spec.ts
+
+# 排除构建输出（在容器内构建）
+dist
+
+# 排除其他临时文件和目录
+npm-debug.log
+pnpm-debug.log
+yarn-error.log
+.vscode
+.idea
