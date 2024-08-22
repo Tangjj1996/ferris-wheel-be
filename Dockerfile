@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 COPY package.json pnpm-lock.yaml ./
 
 # 安装依赖项
-RUN pnpm install --prod
+RUN pnpm install
 
 # 复制应用程序源代码
 COPY . .
@@ -24,3 +24,5 @@ USER node
 
 # 暴露应用程序端口
 EXPOSE 3000
+
+CMD [ "node", "dist/main.js"]
