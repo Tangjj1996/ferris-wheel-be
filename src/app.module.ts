@@ -13,7 +13,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'postgres',
       password: 'tangji',
       database: 'nestjs-demo-1',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'], // 确保实体路径正确
+      autoLoadEntities: true,
       synchronize: true,
     }),
     UserModule,
