@@ -26,7 +26,7 @@ import { UserModule } from './user/user.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
         autoLoadEntities: true,
-        synchronize: isProd,
+        synchronize: !isProd,
       }),
     }),
     UserModule,
