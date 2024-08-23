@@ -15,6 +15,8 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   // 注册全局拦截器
   app.useGlobalInterceptors(new TransformInterceptor());
+  // 允许跨域
+  app.enableCors();
 
   await app.listen(3000);
 }
