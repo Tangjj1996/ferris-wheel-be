@@ -12,3 +12,10 @@ export enum DashboardType {
    */
   slotMachine = 'slotMachine',
 }
+
+export enum PrizesBg {
+  /** 奇数 */
+  odd = '#e9e8fe',
+  /** 偶数 */
+  even = '#b8c5f2',
+}
