@@ -1,7 +1,7 @@
 import {
   Entity,
   Column,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   OneToMany,
   ManyToOne,
   JoinColumn,
@@ -12,7 +12,7 @@ import { DashboardType } from '../enum';
 
 @Entity({ name: 'user_dashboard_config' })
 export class UserDashboardConfig {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ name: 'dashboard_title' })

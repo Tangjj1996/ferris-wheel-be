@@ -28,7 +28,7 @@ export class UserService {
       relations: ['userDashboardConifgItems', 'auth'],
     });
 
-    if (!config) {
+    if (!config.length) {
       config = await this.init();
     }
 
