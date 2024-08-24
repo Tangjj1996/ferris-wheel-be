@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,15 +13,11 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    try {
-      // 创建一个新的用户实例，此时只是一个普通的 js 对象
-      const newUser = this.userRepository.create(createUserDto);
+    // 创建一个新的用户实例，此时只是一个普通的 js 对象
+    const newUser = this.userRepository.create(createUserDto);
 
-      // 将实例保存到数据库中
-      return await this.userRepository.save(newUser);
-    } catch (e) {
-      throw new InternalServerErrorException('failed to create user');
-    }
+    // 将实例保存到数据库中
+    return await this.userRepository.save(newUser);
   }
 
   async findAll() {
@@ -41,7 +37,10 @@ export class UserService {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
-      throw new Error(`user with ID ${id} not found`);
+      throw new HttpException(
+        `user with ID ${id} not found`,
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return await this.userRepository.delete(id);
   }
