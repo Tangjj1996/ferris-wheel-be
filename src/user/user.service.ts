@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { produce } from 'immer';
+import { cloneDeep } from 'lodash';
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
 import { UserDashboardConifgItems } from './entities/UserDashboardConifgItems.entity';
 import { userDashboardConfig, userDashboardConifgItems } from './const';
@@ -31,8 +31,6 @@ export class UserService {
     if (!config.length) {
       config = await this.init();
     }
-
-    console.log('config::::::::::', config);
     return config;
   }
 
@@ -40,26 +38,20 @@ export class UserService {
    * 初始化数据
    */
   async init() {
-    // 赋值 openid
-    const dashboardConfig = userDashboardConfig;
-    // userDashboardConfig 关联到父级
-    const dashboardConfigImtes = produce(
-      userDashboardConifgItems,
-      (confing) => {
-        confing.forEach(
-          (item) =>
-            (item.userDashboardConfig = dashboardConfig.find(
-              (dItem) => dItem.id === item.id,
-            ) as any),
+    const userDashboardConfigClone = cloneDeep(userDashboardConfig);
+    const userDashboardConifgItemsClone = cloneDeep(userDashboardConifgItems);
+
+    await this.userDashboardConfigRepository.save(userDashboardConfigClone);
+    await Promise.all([
+      userDashboardConifgItemsClone.map(async (userDashboardConifgItem) => {
+        await this.UserDashboardConifgItemsRepository.save(
+          userDashboardConifgItem,
         );
-      },
-    );
+      }),
+    ]);
 
-    await this.userDashboardConfigRepository.save(dashboardConfig);
-    await this.UserDashboardConifgItemsRepository.save(dashboardConfigImtes);
+    console.log(userDashboardConfigClone, userDashboardConifgItemsClone);
 
-    console.log(dashboardConfig, dashboardConfigImtes, '++++');
-
-    return dashboardConfig as UserDashboardConfig[];
+    return userDashboardConfigClone as UserDashboardConfig[];
   }
 }

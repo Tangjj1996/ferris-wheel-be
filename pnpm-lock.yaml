@@ -38,9 +38,9 @@ dependencies:
   class-validator:
     specifier: ^0.14.1
     version: 0.14.1
-  immer:
-    specifier: ^10.1.1
-    version: 10.1.1
+  lodash:
+    specifier: ^4.17.21
+    version: 4.17.21
   mysql2:
     specifier: ^3.11.0
     version: 3.11.0
@@ -76,6 +76,9 @@ devDependencies:
   '@types/jest':
     specifier: ^29.5.2
     version: 29.5.12
+  '@types/lodash':
+    specifier: ^4.17.7
+    version: 4.17.7
   '@types/node':
     specifier: ^20.3.1
     version: 20.14.15
@@ -1303,6 +1306,10 @@ packages:
     dependencies:
       '@types/node': 20.14.15
     dev: false
+
+  /@types/lodash@4.17.7:
+    resolution: {integrity: sha512-8wTvZawATi/lsmNu10/j2hk1KEP0IvjubqPE3cu1Xz7xfXXt5oCq3SNUz4fMIP4XGF9Ky+Ue2tBA3hcS7LSBlA==}
+    dev: true
 
   /@types/methods@1.1.4:
     resolution: {integrity: sha512-ymXWVrDiCxTBE3+RIrrP533E70eA+9qu7zdWoHuOmGujkYtzf4HQF96b8nwHLqhuf4ykX61IGRIB38CC6/sImQ==}
@@ -3143,10 +3150,6 @@ packages:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
     dev: true
-
-  /immer@10.1.1:
-    resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
-    dev: false
 
   /import-fresh@3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}

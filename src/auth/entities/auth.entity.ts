@@ -24,5 +24,5 @@ export class Auth {
   avatar: string;
 
   @OneToMany(() => UserDashboardConfig, (config) => config.auth)
-  userDashboardConfig: UserDashboardConfig;
+  userDashboardConfig: UserDashboardConfig[];
 }
