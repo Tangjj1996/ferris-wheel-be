@@ -48,7 +48,7 @@ export class AuthService {
       { secret: this.configService.get<string>('JWT_SECRET') },
     );
 
-    return { token };
+    return { token, openid };
   }
 
   private async findOrCreateUser(openid: string) {

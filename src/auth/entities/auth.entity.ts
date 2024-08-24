@@ -8,14 +8,17 @@ export class Auth {
   @Column({ unique: true })
   openid: string;
 
-  @Column()
+  @Column({ nullable: true })
   username: string;
 
   @Column({
     name: 'phone_number',
+    nullable: true,
   })
   phoneNumber: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   avatar: string;
 }
