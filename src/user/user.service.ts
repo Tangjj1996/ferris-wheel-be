@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { cloneDeep } from 'lodash';
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
 import { UserDashboardConifgItems } from './entities/UserDashboardConifgItems.entity';
 import { userDashboardConfig, userDashboardConifgItems } from './const';
@@ -38,23 +37,41 @@ export class UserService {
    * 初始化数据
    */
   async init() {
-    const userDashboardConfigClone = cloneDeep(userDashboardConfig);
-    const userDashboardConifgItemsClone = cloneDeep(userDashboardConifgItems);
+    const result = await Promise.all(
+      userDashboardConfig.map(async (item, index) => {
+        const userDashboardConfigInstant = new UserDashboardConfig();
 
-    userDashboardConfigClone.forEach(
-      (item, index) =>
-        (item.userDashboardConifgItems = userDashboardConifgItemsClone[
-          index
-        ] as UserDashboardConifgItems[]),
+        userDashboardConfigInstant.dashboardTitle = item.dashboardTitle;
+        userDashboardConfigInstant.dashboardType = item.dashboardType;
+
+        await this.userDashboardConfigRepository.save(
+          userDashboardConfigInstant,
+        );
+        const userDashboardConifgItemsResults = userDashboardConifgItems.map(
+          (iItem) => {
+            const userDashboardConfigItemsInstant =
+              new UserDashboardConifgItems();
+
+            userDashboardConfigItemsInstant.text = iItem[index].text;
+            userDashboardConfigItemsInstant.priority = iItem[index].priority;
+            userDashboardConfigItemsInstant.background =
+              iItem[index].background;
+
+            return userDashboardConfigItemsInstant;
+          },
+        );
+
+        await this.UserDashboardConifgItemsRepository.save(
+          userDashboardConifgItemsResults,
+        );
+
+        userDashboardConfigInstant.userDashboardConifgItems =
+          userDashboardConifgItemsResults;
+
+        return userDashboardConfigInstant;
+      }),
     );
 
-    await this.userDashboardConfigRepository.save(userDashboardConfigClone);
-    await Promise.all([
-      userDashboardConifgItemsClone.map((userDashboardConifgItem) =>
-        this.UserDashboardConifgItemsRepository.save(userDashboardConifgItem),
-      ),
-    ]);
-
-    return userDashboardConfigClone as UserDashboardConfig[];
+    return result;
   }
 }
