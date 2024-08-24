@@ -28,38 +28,41 @@ export class UserService {
     });
 
     if (!config.length) {
-      config = await this.init();
+      config = await this.init(openid);
     }
+
     return config;
   }
 
   /**
    * 初始化数据
    */
-  async init() {
+  async init(openid: string) {
     const result = await Promise.all(
       userDashboardConfig.map(async (item, index) => {
         const userDashboardConfigInstant = new UserDashboardConfig();
 
         userDashboardConfigInstant.dashboardTitle = item.dashboardTitle;
         userDashboardConfigInstant.dashboardType = item.dashboardType;
+        (userDashboardConfigInstant as any).openid = openid;
 
         await this.userDashboardConfigRepository.save(
           userDashboardConfigInstant,
         );
-        const userDashboardConifgItemsResults = userDashboardConifgItems.map(
-          (iItem) => {
-            const userDashboardConfigItemsInstant =
-              new UserDashboardConifgItems();
+        const userDashboardConifgItemsResults = userDashboardConifgItems[
+          index
+        ].map((iItem) => {
+          const userDashboardConfigItemsInstant =
+            new UserDashboardConifgItems();
 
-            userDashboardConfigItemsInstant.text = iItem[index].text;
-            userDashboardConfigItemsInstant.priority = iItem[index].priority;
-            userDashboardConfigItemsInstant.background =
-              iItem[index].background;
+          userDashboardConfigItemsInstant.text = iItem.text;
+          userDashboardConfigItemsInstant.priority = iItem.priority;
+          userDashboardConfigItemsInstant.background = iItem.background;
+          (userDashboardConfigItemsInstant as any).user_dashboard_config_id =
+            userDashboardConfigInstant.id;
 
-            return userDashboardConfigItemsInstant;
-          },
-        );
+          return userDashboardConfigItemsInstant;
+        });
 
         await this.UserDashboardConifgItemsRepository.save(
           userDashboardConifgItemsResults,
