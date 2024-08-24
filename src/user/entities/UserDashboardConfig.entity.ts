@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Auth } from '@/auth/entities/auth.entity';
 import { UserDashboardConifgItems } from './UserDashboardConifgItems.entity';
 import { DashboardType } from '../enum';
 
@@ -13,9 +21,10 @@ export class UserDashboardConfig {
   @Column({ name: 'dashboard_type', type: 'enum', enum: DashboardType })
   dashboardType: DashboardType;
 
-  @Column({ type: 'char', length: 36 })
-  openid: string;
-
   @OneToMany(() => UserDashboardConifgItems, (item) => item.userDashboardConfig)
   userDashboardConifgItems: UserDashboardConifgItems[];
+
+  @ManyToOne(() => Auth, (auth) => auth.userDashboardConfig)
+  @JoinColumn({ name: 'openid', referencedColumnName: 'openid' })
+  auth: Auth;
 }

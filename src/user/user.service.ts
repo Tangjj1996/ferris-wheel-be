@@ -24,25 +24,24 @@ export class UserService {
    */
   async getConfig(openid: string) {
     let config = await this.userDashboardConfigRepository.find({
-      where: { openid },
-      relations: ['userDashboardConifgItems'],
+      where: { auth: { openid } },
+      relations: ['userDashboardConifgItems', 'auth'],
     });
 
     if (!config) {
-      config = await this.init(openid);
+      config = await this.init();
     }
 
+    console.log('config::::::::::', config);
     return config;
   }
 
   /**
    * 初始化数据
    */
-  async init(openid: string) {
+  async init() {
     // 赋值 openid
-    const dashboardConfig = produce(userDashboardConfig, (config) => {
-      config.forEach((item) => (item.openid = openid));
-    });
+    const dashboardConfig = userDashboardConfig;
     // userDashboardConfig 关联到父级
     const dashboardConfigImtes = produce(
       userDashboardConifgItems,
@@ -58,6 +57,8 @@ export class UserService {
 
     await this.userDashboardConfigRepository.save(dashboardConfig);
     await this.UserDashboardConifgItemsRepository.save(dashboardConfigImtes);
+
+    console.log(dashboardConfig, dashboardConfigImtes, '++++');
 
     return dashboardConfig as UserDashboardConfig[];
   }

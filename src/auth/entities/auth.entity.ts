@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { UserDashboardConfig } from '@/user/entities/UserDashboardConfig.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'auth' })
 export class Auth {
   @PrimaryGeneratedColumn()
   id: number;
@@ -21,4 +22,7 @@ export class Auth {
     nullable: true,
   })
   avatar: string;
+
+  @OneToMany(() => UserDashboardConfig, (config) => config.auth)
+  userDashboardConfig: UserDashboardConfig;
 }
