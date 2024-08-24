@@ -2,6 +2,17 @@ import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
 import { UserDashboardConifgItems } from './entities/UserDashboardConifgItems.entity';
 import { DashboardType, PrizesBg } from './enum';
 
+export const userDashboardConfig: Partial<UserDashboardConfig>[] = [
+  {
+    dashboardType: DashboardType.wheel,
+    dashboardTitle: '中午吃啥🍽️',
+  },
+  {
+    dashboardType: DashboardType.wheel,
+    dashboardTitle: '今天谁买单💵',
+  },
+];
+
 export const userDashboardConifgItems: Partial<UserDashboardConifgItems>[][] = [
   [
     {
@@ -55,19 +66,4 @@ export const userDashboardConifgItems: Partial<UserDashboardConifgItems>[][] = [
       background: PrizesBg.even,
     },
   ],
-];
-
-export const userDashboardConfig: Partial<UserDashboardConfig>[] = [
-  {
-    dashboardType: DashboardType.wheel,
-    dashboardTitle: '中午吃啥🍽️',
-    userDashboardConifgItems:
-      userDashboardConifgItems[0] as UserDashboardConifgItems[],
-  },
-  {
-    dashboardType: DashboardType.wheel,
-    dashboardTitle: '今天谁买单💵',
-    userDashboardConifgItems:
-      userDashboardConifgItems[1] as UserDashboardConifgItems[],
-  },
 ];

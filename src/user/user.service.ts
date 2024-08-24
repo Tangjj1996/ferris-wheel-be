@@ -41,16 +41,18 @@ export class UserService {
     const userDashboardConfigClone = cloneDeep(userDashboardConfig);
     const userDashboardConifgItemsClone = cloneDeep(userDashboardConifgItems);
 
+    userDashboardConfigClone[0].userDashboardConifgItems =
+      userDashboardConifgItemsClone[0] as UserDashboardConifgItems[];
+
+    userDashboardConfigClone[1].userDashboardConifgItems =
+      userDashboardConifgItemsClone[1] as UserDashboardConifgItems[];
+
     await this.userDashboardConfigRepository.save(userDashboardConfigClone);
     await Promise.all([
-      userDashboardConifgItemsClone.map(async (userDashboardConifgItem) => {
-        await this.UserDashboardConifgItemsRepository.save(
-          userDashboardConifgItem,
-        );
-      }),
+      userDashboardConifgItemsClone.map((userDashboardConifgItem) =>
+        this.UserDashboardConifgItemsRepository.save(userDashboardConifgItem),
+      ),
     ]);
-
-    console.log(userDashboardConfigClone, userDashboardConifgItemsClone);
 
     return userDashboardConfigClone as UserDashboardConfig[];
   }
