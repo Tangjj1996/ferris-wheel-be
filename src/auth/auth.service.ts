@@ -75,6 +75,7 @@ export class AuthService {
           this.userDashboardConfigRepository.create({
             dashboard_title: item.dashboard_title,
             dashboard_type: item.dashboard_type,
+            dashboard_option: item.dashboard_option,
           });
 
         // 顺序执行 userDashboardConfigItems 的创建和保存操作
