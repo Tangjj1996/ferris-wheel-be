@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Auth } from '@/auth/entities/auth.entity';
 import { UserDashboardConifgItems } from './UserDashboardConifgItems.entity';
@@ -32,5 +33,6 @@ export class UserDashboardConfig {
   @ManyToOne(() => Auth, (auth) => auth.userDashboardConfig, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'openid' })
   auth: Auth;
 }

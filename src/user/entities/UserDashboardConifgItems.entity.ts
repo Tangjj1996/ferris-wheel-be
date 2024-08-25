@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   Generated,
+  JoinColumn,
 } from 'typeorm';
 import { UserDashboardConfig } from './UserDashboardConfig.entity';
 
@@ -35,5 +36,6 @@ export class UserDashboardConifgItems {
       onDelete: 'CASCADE',
     },
   )
+  @JoinColumn({ name: 'user_dashboard_config_id' })
   userDashboardConfig: UserDashboardConfig;
 }

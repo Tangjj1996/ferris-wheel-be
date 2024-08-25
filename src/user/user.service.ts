@@ -31,6 +31,8 @@ export class UserService {
       relations: ['userDashboardConifgItems', 'auth'],
     });
 
+    console.log(JSON.stringify(config, null, 2));
+
     if (!config.length) {
       config = await this.init(openid);
     }
@@ -75,9 +77,6 @@ export class UserService {
         await this.UserDashboardConifgItemsRepository.save(
           userDashboardConifgItemsResults,
         );
-
-        userDashboardConfigInstant.userDashboardConifgItems =
-          userDashboardConifgItemsResults;
 
         return userDashboardConfigInstant;
       }),
