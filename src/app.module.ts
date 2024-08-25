@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as path from 'path';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 import { isProd } from '@/utils';
 
@@ -30,6 +31,7 @@ import { UserModule } from './user/user.module';
         database: configService.get<string>('DB_DATABASE'),
         autoLoadEntities: true,
         synchronize: !isProd,
+        namingStrategy: new SnakeNamingStrategy(),
       }),
     }),
     UserModule,

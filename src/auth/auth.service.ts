@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import { Repository } from 'typeorm';
 
+import { BizHttpStatus } from '@/enum';
 import { userDashboardConfig, userDashboardConfigItems } from '@/user/const';
 import { UserDashboardConfig } from '@/user/entities/UserDashboardConfig.entity';
 import { UserDashboardConfigItems } from '@/user/entities/UserDashboardConfigItems.entity';
@@ -42,8 +43,8 @@ export class AuthService {
     if (!openid) {
       throw new HttpException(
         {
-          code: 4001,
-          msg: '',
+          code: BizHttpStatus.wx_not_found_openid,
+          msg: '微信 openid 不存在',
         },
         HttpStatus.UNAUTHORIZED,
       );
@@ -66,12 +67,12 @@ export class AuthService {
     let user = await this.useRepository.findOne({ where: { openid } });
     if (!user) {
       user = this.useRepository.create({ openid });
-      user.userDashboardConfig = await Promise.all(
+      user.user_dashboard_config = await Promise.all(
         userDashboardConfig.map(async (item, index) => {
           const userDashboardConfigInstant =
             this.userDashboardConfigRepository.create({
-              dashboardTitle: item.dashboardTitle,
-              dashboardType: item.dashboardType,
+              dashboard_title: item.dashboard_title,
+              dashboard_type: item.dashboard_type,
             });
 
           const items = userDashboardConfigItems[index].map((iItem) =>
@@ -83,7 +84,7 @@ export class AuthService {
           );
           await this.userDashboardConfigItemsRepository.save(items);
 
-          userDashboardConfigInstant.userDashboardConfigItems = items;
+          userDashboardConfigInstant.user_dashboard_config_items = items;
           await this.userDashboardConfigRepository.save(
             userDashboardConfigInstant,
           );

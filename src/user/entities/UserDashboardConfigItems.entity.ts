@@ -32,11 +32,11 @@ export class UserDashboardConfigItems {
 
   @ManyToOne(
     () => UserDashboardConfig,
-    (dashboardConfig) => dashboardConfig.userDashboardConfigItems,
+    (dashboardConfig) => dashboardConfig.user_dashboard_config_items,
     {
       onDelete: 'CASCADE',
     },
   )
   @JoinColumn()
-  userDashboardConfig: UserDashboardConfig;
+  user_dashboard_config: UserDashboardConfig;
 }

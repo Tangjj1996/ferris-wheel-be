@@ -26,21 +26,21 @@ export class UserDashboardConfig {
   key: string;
 
   @Column()
-  dashboardTitle: string;
+  dashboard_title: string;
 
   @Column({ type: 'enum', enum: DashboardType })
-  dashboardType: DashboardType;
+  dashboard_type: DashboardType;
 
   @OneToMany(
     () => UserDashboardConfigItems,
-    (item) => item.userDashboardConfig,
+    (item) => item.user_dashboard_config,
     {
       cascade: true,
     },
   )
-  userDashboardConfigItems: UserDashboardConfigItems[];
+  user_dashboard_config_items: UserDashboardConfigItems[];
 
-  @ManyToOne(() => Auth, (auth) => auth.userDashboardConfig, {
+  @ManyToOne(() => Auth, (auth) => auth.user_dashboard_config, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()

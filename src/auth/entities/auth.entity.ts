@@ -16,7 +16,7 @@ export class Auth {
   @Column({
     nullable: true,
   })
-  phoneNumber: string;
+  phone_number: string;
 
   @Column({
     nullable: true,
@@ -26,5 +26,5 @@ export class Auth {
   @OneToMany(() => UserDashboardConfig, (config) => config.auth, {
     cascade: true,
   })
-  userDashboardConfig: UserDashboardConfig[];
+  user_dashboard_config: UserDashboardConfig[];
 }

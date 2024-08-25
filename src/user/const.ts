@@ -4,12 +4,12 @@ import { DashboardType, PrizesBg } from './enum';
 
 export const userDashboardConfig: Partial<UserDashboardConfig>[] = [
   {
-    dashboardType: DashboardType.wheel,
-    dashboardTitle: '中午吃啥🍽️',
+    dashboard_title: '中午吃啥🍽️',
+    dashboard_type: DashboardType.wheel,
   },
   {
-    dashboardType: DashboardType.wheel,
-    dashboardTitle: '今天谁买单💵',
+    dashboard_title: '今天谁买单💵',
+    dashboard_type: DashboardType.wheel,
   },
 ];
 

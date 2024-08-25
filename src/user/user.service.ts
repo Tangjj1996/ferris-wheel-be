@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
+import { DashboardType } from './enum';
 
 @Injectable()
 export class UserService {
@@ -21,11 +22,25 @@ export class UserService {
     const config = await this.userDashboardConfigRepository.find({
       where: { auth: { openid } },
       relations: {
-        userDashboardConfigItems: true,
-        auth: true,
+        user_dashboard_config_items: true,
       },
     });
 
-    return config;
+    const transformConfig = config.map(
+      ({ user_dashboard_config_items, ...item }) => {
+        const origin = {
+          ...item,
+        };
+        if (item.dashboard_title === DashboardType.wheel) {
+          Object.assign(origin, {
+            luck_wheel_config: user_dashboard_config_items,
+          });
+        }
+
+        return origin;
+      },
+    );
+
+    return transformConfig;
   }
 }
