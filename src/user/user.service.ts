@@ -28,7 +28,7 @@ export class UserService {
   async getConfig(openid: string) {
     let config = await this.userDashboardConfigRepository.find({
       where: { auth: { openid } },
-      relations: ['UserDashboardConfigItems', 'auth'],
+      relations: ['userDashboardConfigItems', 'auth'],
     });
 
     if (!config.length) {
@@ -42,44 +42,39 @@ export class UserService {
    * 初始化数据
    */
   async init(openid: string) {
-    const result = await Promise.all(
+    const auth = await this.authRepository.findOneOrFail({ where: { openid } });
+
+    const configs = await Promise.all(
       userDashboardConfig.map(async (item, index) => {
-        const userDashboardConfigInstant = new UserDashboardConfig();
-        const auth = await this.authRepository.findOne({
-          where: { openid },
-        });
+        const userDashboardConfigInstant =
+          this.userDashboardConfigRepository.create({
+            dashboardTitle: item.dashboardTitle,
+            dashboardType: item.dashboardType,
+            auth,
+          });
 
-        userDashboardConfigInstant.dashboardTitle = item.dashboardTitle;
-        userDashboardConfigInstant.dashboardType = item.dashboardType;
-        userDashboardConfigInstant.auth = auth;
+        const items = userDashboardConfigItems[index].map((iItem) =>
+          this.userDashboardConfigItemsRepository.create({
+            text: iItem.text,
+            priority: iItem.priority,
+            background: iItem.background,
+            userDashboardConfig: userDashboardConfigInstant,
+          }),
+        );
 
+        // Assign items to the config instance
+        userDashboardConfigInstant.userDashboardConfigItems = items;
+
+        // Save both config and items
         await this.userDashboardConfigRepository.save(
           userDashboardConfigInstant,
         );
-
-        const UserDashboardConfigItemsResults = userDashboardConfigItems[
-          index
-        ].map((iItem) => {
-          const userDashboardConfigItemsInstant =
-            new UserDashboardConfigItems();
-
-          userDashboardConfigItemsInstant.text = iItem.text;
-          userDashboardConfigItemsInstant.priority = iItem.priority;
-          userDashboardConfigItemsInstant.background = iItem.background;
-          userDashboardConfigItemsInstant.userDashboardConfig =
-            userDashboardConfigInstant;
-
-          return userDashboardConfigItemsInstant;
-        });
-
-        await this.userDashboardConfigItemsRepository.save(
-          UserDashboardConfigItemsResults,
-        );
+        await this.userDashboardConfigItemsRepository.save(items);
 
         return userDashboardConfigInstant;
       }),
     );
 
-    return result;
+    return configs;
   }
 }

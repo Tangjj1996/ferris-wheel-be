@@ -31,7 +31,7 @@ export class UserDashboardConfigItems {
 
   @ManyToOne(
     () => UserDashboardConfig,
-    (dashboardConfig) => dashboardConfig.UserDashboardConfigItems,
+    (dashboardConfig) => dashboardConfig.userDashboardConfigItems,
     {
       onDelete: 'CASCADE',
     },

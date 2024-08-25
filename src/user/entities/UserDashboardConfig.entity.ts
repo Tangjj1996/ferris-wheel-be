@@ -28,7 +28,7 @@ export class UserDashboardConfig {
       cascade: true,
     },
   )
-  UserDashboardConfigItems: UserDashboardConfigItems[];
+  userDashboardConfigItems: UserDashboardConfigItems[];
 
   @ManyToOne(() => Auth, (auth) => auth.userDashboardConfig, {
     onDelete: 'CASCADE',
