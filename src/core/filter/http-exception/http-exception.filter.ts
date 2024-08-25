@@ -22,8 +22,8 @@ export class HttpExceptionFilter<T extends HttpException>
 
     const errorResponse = {
       data: null,
-      code: -1,
-      status: message,
+      code: response?.code ?? -1,
+      msg: response?.msg ?? message,
       traceId: '111',
     };
 

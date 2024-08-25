@@ -13,7 +13,7 @@ export class TransformInterceptor implements NestInterceptor {
       map((data) => ({
         data,
         code: 200,
-        status: '请求成功',
+        msg: '请求成功',
         traceId: '222',
       })),
     );
