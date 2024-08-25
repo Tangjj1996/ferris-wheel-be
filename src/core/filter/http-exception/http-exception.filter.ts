@@ -23,8 +23,8 @@ export class HttpExceptionFilter<T extends HttpException>
 
     const errorResponse = {
       data: null,
-      code: response?.code ?? HttpStatus.INTERNAL_SERVER_ERROR,
-      msg: response?.msg ?? message,
+      code: response?.code ?? status,
+      msg: response?.msg || message,
       traceId: '111',
     };
 
