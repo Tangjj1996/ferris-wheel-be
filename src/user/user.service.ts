@@ -1,48 +1,79 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
+import { UserDashboardConfigItems } from './entities/UserDashboardConfigItems.entity';
+import { userDashboardConfig, userDashboardConfigItems } from './const';
+import { Auth } from '@/auth/entities/auth.entity';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    @InjectRepository(Auth)
+    private readonly authRepository: Repository<Auth>,
+
+    @InjectRepository(UserDashboardConfig)
+    private readonly userDashboardConfigRepository: Repository<UserDashboardConfig>,
+
+    @InjectRepository(UserDashboardConfigItems)
+    private readonly userDashboardConfigItemsRepository: Repository<UserDashboardConfigItems>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
-    try {
-      // 创建一个新的用户实例，此时只是一个普通的 js 对象
-      const newUser = this.userRepository.create(createUserDto);
+  /**
+   * 获取用户配置
+   * 根据 openid，查找
+   * 如果没有数据，初始化数据，
+   * 如果有数据，返回最新数据
+   */
+  async getConfig(openid: string) {
+    let config = await this.userDashboardConfigRepository.find({
+      where: { auth: { openid } },
+      relations: ['userDashboardConfigItems', 'auth'],
+    });
 
-      // 将实例保存到数据库中
-      return await this.userRepository.save(newUser);
-    } catch (e) {
-      throw new InternalServerErrorException('failed to create user');
+    if (!config.length) {
+      config = await this.init(openid);
     }
+
+    return config;
   }
 
-  async findAll() {
-    return this.userRepository.find();
-  }
+  /**
+   * 初始化数据
+   */
+  async init(openid: string) {
+    const auth = await this.authRepository.findOneOrFail({ where: { openid } });
 
-  async findOne(id: number) {
-    return await this.userRepository.findOne({ where: { id } });
-  }
+    const configs = await Promise.all(
+      userDashboardConfig.map(async (item, index) => {
+        const userDashboardConfigInstant =
+          this.userDashboardConfigRepository.create({
+            dashboardTitle: item.dashboardTitle,
+            dashboardType: item.dashboardType,
+            auth,
+          });
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    await this.userRepository.update(id, updateUserDto);
-    return await this.userRepository.findOne({ where: { id } });
-  }
+        const savedConfig = await this.userDashboardConfigRepository.save(
+          userDashboardConfigInstant,
+        );
 
-  async remove(id: number) {
-    const user = await this.userRepository.findOne({ where: { id } });
+        const items = userDashboardConfigItems[index].map((iItem) =>
+          this.userDashboardConfigItemsRepository.create({
+            text: iItem.text,
+            priority: iItem.priority,
+            background: iItem.background,
+            userDashboardConfig: savedConfig,
+          }),
+        );
 
-    if (!user) {
-      throw new Error(`user with ID ${id} not found`);
-    }
-    return await this.userRepository.delete(id);
+        // Assign items to the config instance
+        savedConfig.userDashboardConfigItems = items;
+        await this.userDashboardConfigItemsRepository.save(items);
+
+        return savedConfig;
+      }),
+    );
+
+    return configs;
   }
 }

@@ -12,7 +12,8 @@ export class HttpExceptionFilter<T extends HttpException>
   catch(exception: T, host: ArgumentsHost) {
     const ctx = host.switchToHttp(); // 获取请求上下文
     const response = ctx.getResponse(); // 获取请求上下文中的 response 对象
-    const status = exception.getStatus(); // 获取异常状态码
+    // todo dto 转换抛出错误
+    const status = exception?.getStatus?.() || 500; // 获取异常状态码
 
     // 设置错误信息
     const message = exception.message
