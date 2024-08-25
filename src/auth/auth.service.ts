@@ -5,6 +5,9 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Auth } from './entities/auth.entity';
+import { UserDashboardConfig } from '@/user/entities/UserDashboardConfig.entity';
+import { UserDashboardConfigItems } from '@/user/entities/UserDashboardConfigItems.entity';
+import { userDashboardConfig, userDashboardConfigItems } from '@/user/const';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +16,11 @@ export class AuthService {
     private readonly configService: ConfigService,
     @InjectRepository(Auth)
     private readonly useRepository: Repository<Auth>,
+    @InjectRepository(UserDashboardConfig)
+    private readonly userDashboardConfigRepository: Repository<UserDashboardConfig>,
+
+    @InjectRepository(UserDashboardConfigItems)
+    private readonly userDashboardConfigItemsRepository: Repository<UserDashboardConfigItems>,
   ) {}
 
   async wechatLogin(code: string) {
@@ -56,6 +64,31 @@ export class AuthService {
     let user = await this.useRepository.findOne({ where: { openid } });
     if (!user) {
       user = this.useRepository.create({ openid });
+      user.userDashboardConfig = await Promise.all(
+        userDashboardConfig.map(async (item, index) => {
+          const userDashboardConfigInstant =
+            this.userDashboardConfigRepository.create({
+              dashboardTitle: item.dashboardTitle,
+              dashboardType: item.dashboardType,
+            });
+
+          const items = userDashboardConfigItems[index].map((iItem) =>
+            this.userDashboardConfigItemsRepository.create({
+              text: iItem.text,
+              priority: iItem.priority,
+              background: iItem.background,
+            }),
+          );
+          await this.userDashboardConfigItemsRepository.save(items);
+
+          userDashboardConfigInstant.userDashboardConfigItems = items;
+          await this.userDashboardConfigRepository.save(
+            userDashboardConfigInstant,
+          );
+
+          return userDashboardConfigInstant;
+        }),
+      );
       await this.useRepository.save(user);
     }
 
