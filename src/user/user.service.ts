@@ -28,16 +28,17 @@ export class UserService {
 
     const transformConfig = config.map(
       ({ user_dashboard_config_items, ...item }) => {
-        const origin = {
+        const originConfigItems = {
           ...item,
+          luck_wheel_config: null,
+          luck_grid_config: null,
+          slot_machine_config: null,
         };
-        if (item.dashboard_title === DashboardType.wheel) {
-          Object.assign(origin, {
-            luck_wheel_config: user_dashboard_config_items,
-          });
+        if (item.dashboard_type === DashboardType.wheel) {
+          originConfigItems.luck_wheel_config = user_dashboard_config_items;
         }
 
-        return origin;
+        return originConfigItems;
       },
     );
 
