@@ -4,7 +4,23 @@ import { DashboardType, PrizesBg } from './enum';
 
 export const userDashboardConfig: Partial<UserDashboardConfig>[] = [
   {
-    dashboard_title: '中午吃啥🍽️',
+    dashboard_title: '早餐吃什么',
+    dashboard_type: DashboardType.wheel,
+  },
+  {
+    dashboard_title: '中午吃什么🍽️',
+    dashboard_type: DashboardType.wheel,
+  },
+  {
+    dashboard_title: '下午茶吃什么',
+    dashboard_type: DashboardType.wheel,
+  },
+  {
+    dashboard_title: '晚餐吃什么',
+    dashboard_type: DashboardType.wheel,
+  },
+  {
+    dashboard_title: '夜宵吃什么',
     dashboard_type: DashboardType.wheel,
   },
   {
@@ -14,6 +30,32 @@ export const userDashboardConfig: Partial<UserDashboardConfig>[] = [
 ];
 
 export const userDashboardConfigItems: Partial<UserDashboardConfigItems>[][] = [
+  [
+    {
+      text: '豆浆油条',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '皮蛋瘦肉粥',
+      background: PrizesBg.even,
+    },
+    {
+      text: '包子',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '小笼包',
+      background: PrizesBg.even,
+    },
+    {
+      text: '煎饼果子',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '糯米鸡',
+      background: PrizesBg.even,
+    },
+  ],
   [
     {
       text: '番茄炒蛋🍅',
@@ -37,6 +79,84 @@ export const userDashboardConfigItems: Partial<UserDashboardConfigItems>[][] = [
     },
     {
       text: '土豆丝🥔',
+      background: PrizesBg.even,
+    },
+  ],
+  [
+    {
+      text: '广式点心',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '茶果',
+      background: PrizesBg.even,
+    },
+    {
+      text: '绿豆糕',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '春卷',
+      background: PrizesBg.even,
+    },
+    {
+      text: '糖不甩',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '蛋挞',
+      background: PrizesBg.even,
+    },
+  ],
+  [
+    {
+      text: '红烧肉',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '宫保鸡丁',
+      background: PrizesBg.even,
+    },
+    {
+      text: '清蒸鲈鱼',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '西红柿炒蛋',
+      background: PrizesBg.even,
+    },
+    {
+      text: '麻婆豆腐',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '酸辣汤',
+      background: PrizesBg.even,
+    },
+  ],
+  [
+    {
+      text: '炒粉',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '煎饺',
+      background: PrizesBg.even,
+    },
+    {
+      text: '皮蛋瘦肉粥',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '烧烤',
+      background: PrizesBg.even,
+    },
+    {
+      text: '卤味拼盘',
+      background: PrizesBg.odd,
+    },
+    {
+      text: '豆腐脑',
       background: PrizesBg.even,
     },
   ],
