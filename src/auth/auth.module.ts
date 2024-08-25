@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Auth } from './entities/auth.entity';
-import { AuthService } from './auth.service';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { UserModule } from '@/user/user.module';
+
 import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { Auth } from './entities/auth.entity';
 
 @Module({
   imports: [
@@ -17,6 +20,7 @@ import { AuthController } from './auth.controller';
         signOptions: { expiresIn: '7d' }, // Token 过期时间
       }),
     }),
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

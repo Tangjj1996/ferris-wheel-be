@@ -1,15 +1,17 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  ManyToOne,
-  JoinColumn,
+  Entity,
   Generated,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+
 import { Auth } from '@/auth/entities/auth.entity';
+
+import { DashboardOption, DashboardType } from '../enum';
 import { UserDashboardConfigItems } from './UserDashboardConfigItems.entity';
-import { DashboardType } from '../enum';
 
 @Entity({ name: 'user_dashboard_config' })
 export class UserDashboardConfig {
@@ -23,24 +25,27 @@ export class UserDashboardConfig {
   })
   key: string;
 
-  @Column({ name: 'dashboard_title' })
-  dashboardTitle: string;
+  @Column()
+  dashboard_title: string;
 
-  @Column({ name: 'dashboard_type', type: 'enum', enum: DashboardType })
-  dashboardType: DashboardType;
+  @Column({ type: 'enum', enum: DashboardType })
+  dashboard_type: DashboardType;
+
+  @Column({ type: 'enum', enum: DashboardOption })
+  dashboard_option: DashboardOption;
 
   @OneToMany(
     () => UserDashboardConfigItems,
-    (item) => item.userDashboardConfig,
+    (item) => item.user_dashboard_config,
     {
       cascade: true,
     },
   )
-  userDashboardConfigItems: UserDashboardConfigItems[];
+  user_dashboard_config_items: UserDashboardConfigItems[];
 
-  @ManyToOne(() => Auth, (auth) => auth.userDashboardConfig, {
+  @ManyToOne(() => Auth, (auth) => auth.user_dashboard_config, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'openid' })
+  @JoinColumn()
   auth: Auth;
 }

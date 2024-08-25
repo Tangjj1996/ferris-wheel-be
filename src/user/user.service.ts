@@ -1,22 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
-import { UserDashboardConfigItems } from './entities/UserDashboardConfigItems.entity';
-import { userDashboardConfig, userDashboardConfigItems } from './const';
-import { Auth } from '@/auth/entities/auth.entity';
+import { DashboardType } from './enum';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(Auth)
-    private readonly authRepository: Repository<Auth>,
-
     @InjectRepository(UserDashboardConfig)
     private readonly userDashboardConfigRepository: Repository<UserDashboardConfig>,
-
-    @InjectRepository(UserDashboardConfigItems)
-    private readonly userDashboardConfigItemsRepository: Repository<UserDashboardConfigItems>,
   ) {}
 
   /**
@@ -26,54 +19,29 @@ export class UserService {
    * 如果有数据，返回最新数据
    */
   async getConfig(openid: string) {
-    let config = await this.userDashboardConfigRepository.find({
+    const config = await this.userDashboardConfigRepository.find({
       where: { auth: { openid } },
-      relations: ['userDashboardConfigItems', 'auth'],
+      relations: {
+        user_dashboard_config_items: true,
+      },
     });
 
-    if (!config.length) {
-      config = await this.init(openid);
-    }
+    const transformConfig = config.map(
+      ({ user_dashboard_config_items, ...item }) => {
+        const originConfigItems = {
+          ...item,
+          luck_wheel_config: null,
+          luck_grid_config: null,
+          slot_machine_config: null,
+        };
+        if (item.dashboard_type === DashboardType.wheel) {
+          originConfigItems.luck_wheel_config = user_dashboard_config_items;
+        }
 
-    return config;
-  }
-
-  /**
-   * 初始化数据
-   */
-  async init(openid: string) {
-    const auth = await this.authRepository.findOneOrFail({ where: { openid } });
-
-    const configs = await Promise.all(
-      userDashboardConfig.map(async (item, index) => {
-        const userDashboardConfigInstant =
-          this.userDashboardConfigRepository.create({
-            dashboardTitle: item.dashboardTitle,
-            dashboardType: item.dashboardType,
-            auth,
-          });
-
-        const savedConfig = await this.userDashboardConfigRepository.save(
-          userDashboardConfigInstant,
-        );
-
-        const items = userDashboardConfigItems[index].map((iItem) =>
-          this.userDashboardConfigItemsRepository.create({
-            text: iItem.text,
-            priority: iItem.priority,
-            background: iItem.background,
-            userDashboardConfig: savedConfig,
-          }),
-        );
-
-        // Assign items to the config instance
-        savedConfig.userDashboardConfigItems = items;
-        await this.userDashboardConfigItemsRepository.save(items);
-
-        return savedConfig;
-      }),
+        return originConfigItems;
+      },
     );
 
-    return configs;
+    return transformConfig;
   }
 }

@@ -1,6 +1,7 @@
 import {
   CallHandler,
   ExecutionContext,
+  HttpStatus,
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
@@ -12,8 +13,8 @@ export class TransformInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => ({
         data,
-        code: 200,
-        status: '请求成功',
+        code: HttpStatus.OK,
+        msg: 'ok',
         traceId: '222',
       })),
     );

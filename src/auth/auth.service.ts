@@ -1,9 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import axios from 'axios';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import axios from 'axios';
 import { Repository } from 'typeorm';
+
+import { BizHttpStatus } from '@/enums';
+import { userDashboardConfig, userDashboardConfigItems } from '@/user/const';
+import { UserDashboardConfig } from '@/user/entities/UserDashboardConfig.entity';
+import { UserDashboardConfigItems } from '@/user/entities/UserDashboardConfigItems.entity';
+
 import { Auth } from './entities/auth.entity';
 
 @Injectable()
@@ -13,6 +19,11 @@ export class AuthService {
     private readonly configService: ConfigService,
     @InjectRepository(Auth)
     private readonly useRepository: Repository<Auth>,
+    @InjectRepository(UserDashboardConfig)
+    private readonly userDashboardConfigRepository: Repository<UserDashboardConfig>,
+
+    @InjectRepository(UserDashboardConfigItems)
+    private readonly userDashboardConfigItemsRepository: Repository<UserDashboardConfigItems>,
   ) {}
 
   async wechatLogin(code: string) {
@@ -32,8 +43,8 @@ export class AuthService {
     if (!openid) {
       throw new HttpException(
         {
-          code: 4001,
-          msg: '',
+          code: BizHttpStatus.wx_not_found_openid,
+          msg: '微信 openid 不存在',
         },
         HttpStatus.UNAUTHORIZED,
       );
@@ -52,10 +63,43 @@ export class AuthService {
   }
 
   private async findOrCreateUser(openid: string) {
-    // 此处应查询数据库是否存在用户，若不存在则创建用户
+    // 查询数据库是否存在用户，若不存在则创建用户
     let user = await this.useRepository.findOne({ where: { openid } });
     if (!user) {
       user = this.useRepository.create({ openid });
+
+      const userDashboardConfigs: UserDashboardConfig[] = [];
+      // 顺序执行 userDashboardConfig 的创建和保存操作
+      for (const [index, item] of userDashboardConfig.entries()) {
+        const userDashboardConfigInstant =
+          this.userDashboardConfigRepository.create({
+            dashboard_title: item.dashboard_title,
+            dashboard_type: item.dashboard_type,
+            dashboard_option: item.dashboard_option,
+          });
+
+        // 顺序执行 userDashboardConfigItems 的创建和保存操作
+        const items: UserDashboardConfigItems[] = [];
+        for (const iItem of userDashboardConfigItems[index]) {
+          const configItem = this.userDashboardConfigItemsRepository.create({
+            text: iItem.text,
+            priority: iItem.priority,
+            background: iItem.background,
+          });
+          items.push(
+            await this.userDashboardConfigItemsRepository.save(configItem),
+          );
+        }
+
+        userDashboardConfigInstant.user_dashboard_config_items = items;
+        await this.userDashboardConfigRepository.save(
+          userDashboardConfigInstant,
+        );
+
+        userDashboardConfigs.push(userDashboardConfigInstant);
+      }
+
+      user.user_dashboard_config = userDashboardConfigs;
       await this.useRepository.save(user);
     }
 

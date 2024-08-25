@@ -1,5 +1,6 @@
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
 import { UserDashboardConfig } from '@/user/entities/UserDashboardConfig.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity({ name: 'auth' })
 export class Auth {
@@ -13,10 +14,9 @@ export class Auth {
   username: string;
 
   @Column({
-    name: 'phone_number',
     nullable: true,
   })
-  phoneNumber: string;
+  phone_number: string;
 
   @Column({
     nullable: true,
@@ -26,5 +26,5 @@ export class Auth {
   @OneToMany(() => UserDashboardConfig, (config) => config.auth, {
     cascade: true,
   })
-  userDashboardConfig: UserDashboardConfig[];
+  user_dashboard_config: UserDashboardConfig[];
 }

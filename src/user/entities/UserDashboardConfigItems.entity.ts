@@ -1,11 +1,12 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
+  Entity,
   Generated,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+
 import { UserDashboardConfig } from './UserDashboardConfig.entity';
 
 @Entity({ name: 'user_dashboard_config_items' })
@@ -31,11 +32,11 @@ export class UserDashboardConfigItems {
 
   @ManyToOne(
     () => UserDashboardConfig,
-    (dashboardConfig) => dashboardConfig.userDashboardConfigItems,
+    (dashboardConfig) => dashboardConfig.user_dashboard_config_items,
     {
       onDelete: 'CASCADE',
     },
   )
-  @JoinColumn({ name: 'user_dashboard_config_id' })
-  userDashboardConfig: UserDashboardConfig;
+  @JoinColumn()
+  user_dashboard_config: UserDashboardConfig;
 }
