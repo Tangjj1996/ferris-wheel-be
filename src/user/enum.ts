@@ -1,3 +1,14 @@
+export enum DashboardOption {
+  /**
+   * 吃
+   */
+  eat = 'eat',
+  /**
+   * 买单
+   */
+  money = 'money',
+}
+
 export enum DashboardType {
   /**
    * 大转盘
@@ -10,7 +21,7 @@ export enum DashboardType {
   /**
    * 老虎机
    */
-  slotMachine = 'slotMachine',
+  slot_machine = 'slot_machine',
 }
 
 export enum PrizesBg {

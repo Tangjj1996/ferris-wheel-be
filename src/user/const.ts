@@ -1,31 +1,37 @@
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
 import { UserDashboardConfigItems } from './entities/UserDashboardConfigItems.entity';
-import { DashboardType, PrizesBg } from './enum';
+import { DashboardOption, DashboardType, PrizesBg } from './enum';
 
 export const userDashboardConfig: Partial<UserDashboardConfig>[] = [
   {
     dashboard_title: '早餐吃什么',
     dashboard_type: DashboardType.wheel,
+    dashboard_option: DashboardOption.eat,
   },
   {
     dashboard_title: '中午吃什么🍽️',
     dashboard_type: DashboardType.wheel,
+    dashboard_option: DashboardOption.eat,
   },
   {
     dashboard_title: '下午茶吃什么',
     dashboard_type: DashboardType.wheel,
+    dashboard_option: DashboardOption.eat,
   },
   {
     dashboard_title: '晚餐吃什么',
     dashboard_type: DashboardType.wheel,
+    dashboard_option: DashboardOption.eat,
   },
   {
     dashboard_title: '夜宵吃什么',
     dashboard_type: DashboardType.wheel,
+    dashboard_option: DashboardOption.eat,
   },
   {
     dashboard_title: '今天谁买单💵',
     dashboard_type: DashboardType.wheel,
+    dashboard_option: DashboardOption.money,
   },
 ];
 

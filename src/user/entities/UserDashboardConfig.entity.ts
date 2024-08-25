@@ -10,7 +10,7 @@ import {
 
 import { Auth } from '@/auth/entities/auth.entity';
 
-import { DashboardType } from '../enum';
+import { DashboardOption, DashboardType } from '../enum';
 import { UserDashboardConfigItems } from './UserDashboardConfigItems.entity';
 
 @Entity({ name: 'user_dashboard_config' })
@@ -30,6 +30,9 @@ export class UserDashboardConfig {
 
   @Column({ type: 'enum', enum: DashboardType })
   dashboard_type: DashboardType;
+
+  @Column({ type: 'enum', enum: DashboardOption })
+  dashboard_option: DashboardOption;
 
   @OneToMany(
     () => UserDashboardConfigItems,
