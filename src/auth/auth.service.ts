@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import { Repository } from 'typeorm';
 
-import { BizHttpStatus } from '@/enum';
+import { BizHttpStatus } from '@/enums';
 import { userDashboardConfig, userDashboardConfigItems } from '@/user/const';
 import { UserDashboardConfig } from '@/user/entities/UserDashboardConfig.entity';
 import { UserDashboardConfigItems } from '@/user/entities/UserDashboardConfigItems.entity';

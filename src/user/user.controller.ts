@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 
-import { BizHttpStatus } from '@/enum';
+import { BizHttpStatus } from '@/enums';
 
 import { UserService } from './user.service';
 
