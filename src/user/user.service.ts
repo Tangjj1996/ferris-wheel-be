@@ -53,25 +53,24 @@ export class UserService {
             auth,
           });
 
+        const savedConfig = await this.userDashboardConfigRepository.save(
+          userDashboardConfigInstant,
+        );
+
         const items = userDashboardConfigItems[index].map((iItem) =>
           this.userDashboardConfigItemsRepository.create({
             text: iItem.text,
             priority: iItem.priority,
             background: iItem.background,
-            userDashboardConfig: userDashboardConfigInstant,
+            userDashboardConfig: savedConfig,
           }),
         );
 
         // Assign items to the config instance
-        userDashboardConfigInstant.userDashboardConfigItems = items;
-
-        // Save both config and items
-        await this.userDashboardConfigRepository.save(
-          userDashboardConfigInstant,
-        );
+        savedConfig.userDashboardConfigItems = items;
         await this.userDashboardConfigItemsRepository.save(items);
 
-        return userDashboardConfigInstant;
+        return savedConfig;
       }),
     );
 
