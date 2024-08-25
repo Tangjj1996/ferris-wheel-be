@@ -23,10 +23,10 @@ export class UserDashboardConfig {
   })
   key: string;
 
-  @Column({ name: 'dashboard_title' })
+  @Column()
   dashboardTitle: string;
 
-  @Column({ name: 'dashboard_type', type: 'enum', enum: DashboardType })
+  @Column({ type: 'enum', enum: DashboardType })
   dashboardType: DashboardType;
 
   @OneToMany(
@@ -41,6 +41,6 @@ export class UserDashboardConfig {
   @ManyToOne(() => Auth, (auth) => auth.userDashboardConfig, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'openid' })
+  @JoinColumn()
   auth: Auth;
 }

@@ -13,7 +13,6 @@ export class Auth {
   username: string;
 
   @Column({
-    name: 'phone_number',
     nullable: true,
   })
   phoneNumber: string;

@@ -36,6 +36,6 @@ export class UserDashboardConfigItems {
       onDelete: 'CASCADE',
     },
   )
-  @JoinColumn({ name: 'user_dashboard_config_id' })
+  @JoinColumn()
   userDashboardConfig: UserDashboardConfig;
 }
