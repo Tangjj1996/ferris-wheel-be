@@ -23,6 +23,8 @@ export class Auth {
   })
   avatar: string;
 
-  @OneToMany(() => UserDashboardConfig, (config) => config.auth)
+  @OneToMany(() => UserDashboardConfig, (config) => config.auth, {
+    cascade: true,
+  })
   userDashboardConfig: UserDashboardConfig[];
 }

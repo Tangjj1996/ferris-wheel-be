@@ -4,7 +4,6 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { Auth } from '@/auth/entities/auth.entity';
 import { UserDashboardConifgItems } from './UserDashboardConifgItems.entity';
@@ -21,10 +20,17 @@ export class UserDashboardConfig {
   @Column({ name: 'dashboard_type', type: 'enum', enum: DashboardType })
   dashboardType: DashboardType;
 
-  @OneToMany(() => UserDashboardConifgItems, (item) => item.userDashboardConfig)
+  @OneToMany(
+    () => UserDashboardConifgItems,
+    (item) => item.userDashboardConfig,
+    {
+      cascade: true,
+    },
+  )
   userDashboardConifgItems: UserDashboardConifgItems[];
 
-  @ManyToOne(() => Auth, (auth) => auth.userDashboardConfig)
-  @JoinColumn({ name: 'openid', referencedColumnName: 'openid' })
+  @ManyToOne(() => Auth, (auth) => auth.userDashboardConfig, {
+    onDelete: 'CASCADE',
+  })
   auth: Auth;
 }

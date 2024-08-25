@@ -4,10 +4,14 @@ import { Repository } from 'typeorm';
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
 import { UserDashboardConifgItems } from './entities/UserDashboardConifgItems.entity';
 import { userDashboardConfig, userDashboardConifgItems } from './const';
+import { Auth } from '@/auth/entities/auth.entity';
 
 @Injectable()
 export class UserService {
   constructor(
+    @InjectRepository(Auth)
+    private readonly authRepository: Repository<Auth>,
+
     @InjectRepository(UserDashboardConfig)
     private readonly userDashboardConfigRepository: Repository<UserDashboardConfig>,
 
@@ -41,14 +45,18 @@ export class UserService {
     const result = await Promise.all(
       userDashboardConfig.map(async (item, index) => {
         const userDashboardConfigInstant = new UserDashboardConfig();
+        const auth = await this.authRepository.findOne({
+          where: { openid },
+        });
 
         userDashboardConfigInstant.dashboardTitle = item.dashboardTitle;
         userDashboardConfigInstant.dashboardType = item.dashboardType;
-        (userDashboardConfigInstant as any).openid = openid;
+        userDashboardConfigInstant.auth = auth;
 
         await this.userDashboardConfigRepository.save(
           userDashboardConfigInstant,
         );
+
         const userDashboardConifgItemsResults = userDashboardConifgItems[
           index
         ].map((iItem) => {
@@ -58,8 +66,8 @@ export class UserService {
           userDashboardConfigItemsInstant.text = iItem.text;
           userDashboardConfigItemsInstant.priority = iItem.priority;
           userDashboardConfigItemsInstant.background = iItem.background;
-          (userDashboardConfigItemsInstant as any).user_dashboard_config_id =
-            userDashboardConfigInstant.id;
+          userDashboardConfigItemsInstant.userDashboardConfig =
+            userDashboardConfigInstant;
 
           return userDashboardConfigItemsInstant;
         });
