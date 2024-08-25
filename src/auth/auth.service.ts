@@ -63,35 +63,42 @@ export class AuthService {
   }
 
   private async findOrCreateUser(openid: string) {
-    // 此处应查询数据库是否存在用户，若不存在则创建用户
+    // 查询数据库是否存在用户，若不存在则创建用户
     let user = await this.useRepository.findOne({ where: { openid } });
     if (!user) {
       user = this.useRepository.create({ openid });
-      user.user_dashboard_config = await Promise.all(
-        userDashboardConfig.map(async (item, index) => {
-          const userDashboardConfigInstant =
-            this.userDashboardConfigRepository.create({
-              dashboard_title: item.dashboard_title,
-              dashboard_type: item.dashboard_type,
-            });
 
-          const items = userDashboardConfigItems[index].map((iItem) =>
-            this.userDashboardConfigItemsRepository.create({
-              text: iItem.text,
-              priority: iItem.priority,
-              background: iItem.background,
-            }),
+      const userDashboardConfigs: UserDashboardConfig[] = [];
+      // 顺序执行 userDashboardConfig 的创建和保存操作
+      for (const [index, item] of userDashboardConfig.entries()) {
+        const userDashboardConfigInstant =
+          this.userDashboardConfigRepository.create({
+            dashboard_title: item.dashboard_title,
+            dashboard_type: item.dashboard_type,
+          });
+
+        // 顺序执行 userDashboardConfigItems 的创建和保存操作
+        const items: UserDashboardConfigItems[] = [];
+        for (const iItem of userDashboardConfigItems[index]) {
+          const configItem = this.userDashboardConfigItemsRepository.create({
+            text: iItem.text,
+            priority: iItem.priority,
+            background: iItem.background,
+          });
+          items.push(
+            await this.userDashboardConfigItemsRepository.save(configItem),
           );
-          await this.userDashboardConfigItemsRepository.save(items);
+        }
 
-          userDashboardConfigInstant.user_dashboard_config_items = items;
-          await this.userDashboardConfigRepository.save(
-            userDashboardConfigInstant,
-          );
+        userDashboardConfigInstant.user_dashboard_config_items = items;
+        await this.userDashboardConfigRepository.save(
+          userDashboardConfigInstant,
+        );
 
-          return userDashboardConfigInstant;
-        }),
-      );
+        userDashboardConfigs.push(userDashboardConfigInstant);
+      }
+
+      user.user_dashboard_config = userDashboardConfigs;
       await this.useRepository.save(user);
     }
 
