@@ -1,11 +1,12 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
+  Entity,
   Generated,
   JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+
 import { UserDashboardConfig } from './UserDashboardConfig.entity';
 
 @Entity({ name: 'user_dashboard_config_items' })

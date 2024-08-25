@@ -1,15 +1,17 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
-  OneToMany,
-  ManyToOne,
-  JoinColumn,
+  Entity,
   Generated,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+
 import { Auth } from '@/auth/entities/auth.entity';
-import { UserDashboardConfigItems } from './UserDashboardConfigItems.entity';
+
 import { DashboardType } from '../enum';
+import { UserDashboardConfigItems } from './UserDashboardConfigItems.entity';
 
 @Entity({ name: 'user_dashboard_config' })
 export class UserDashboardConfig {

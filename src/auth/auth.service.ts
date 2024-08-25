@@ -1,13 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import axios from 'axios';
-import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import axios from 'axios';
 import { Repository } from 'typeorm';
-import { Auth } from './entities/auth.entity';
+
+import { userDashboardConfig, userDashboardConfigItems } from '@/user/const';
 import { UserDashboardConfig } from '@/user/entities/UserDashboardConfig.entity';
 import { UserDashboardConfigItems } from '@/user/entities/UserDashboardConfigItems.entity';
-import { userDashboardConfig, userDashboardConfigItems } from '@/user/const';
+
+import { Auth } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
