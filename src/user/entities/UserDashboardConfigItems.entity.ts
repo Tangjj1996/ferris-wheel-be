@@ -9,7 +9,7 @@ import {
 import { UserDashboardConfig } from './UserDashboardConfig.entity';
 
 @Entity({ name: 'user_dashboard_config_items' })
-export class UserDashboardConifgItems {
+export class UserDashboardConfigItems {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -31,7 +31,7 @@ export class UserDashboardConifgItems {
 
   @ManyToOne(
     () => UserDashboardConfig,
-    (dashboardConfig) => dashboardConfig.userDashboardConifgItems,
+    (dashboardConfig) => dashboardConfig.UserDashboardConfigItems,
     {
       onDelete: 'CASCADE',
     },

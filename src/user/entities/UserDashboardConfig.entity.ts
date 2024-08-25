@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Auth } from '@/auth/entities/auth.entity';
-import { UserDashboardConifgItems } from './UserDashboardConifgItems.entity';
+import { UserDashboardConfigItems } from './UserDashboardConfigItems.entity';
 import { DashboardType } from '../enum';
 
 @Entity({ name: 'user_dashboard_config' })
@@ -22,13 +22,13 @@ export class UserDashboardConfig {
   dashboardType: DashboardType;
 
   @OneToMany(
-    () => UserDashboardConifgItems,
+    () => UserDashboardConfigItems,
     (item) => item.userDashboardConfig,
     {
       cascade: true,
     },
   )
-  userDashboardConifgItems: UserDashboardConifgItems[];
+  UserDashboardConfigItems: UserDashboardConfigItems[];
 
   @ManyToOne(() => Auth, (auth) => auth.userDashboardConfig, {
     onDelete: 'CASCADE',

@@ -1,5 +1,5 @@
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
-import { UserDashboardConifgItems } from './entities/UserDashboardConifgItems.entity';
+import { UserDashboardConfigItems } from './entities/UserDashboardConfigItems.entity';
 import { DashboardType, PrizesBg } from './enum';
 
 export const userDashboardConfig: Partial<UserDashboardConfig>[] = [
@@ -13,7 +13,7 @@ export const userDashboardConfig: Partial<UserDashboardConfig>[] = [
   },
 ];
 
-export const userDashboardConifgItems: Partial<UserDashboardConifgItems>[][] = [
+export const userDashboardConfigItems: Partial<UserDashboardConfigItems>[][] = [
   [
     {
       text: '番茄炒蛋🍅',

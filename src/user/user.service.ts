@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
-import { UserDashboardConifgItems } from './entities/UserDashboardConifgItems.entity';
-import { userDashboardConfig, userDashboardConifgItems } from './const';
+import { UserDashboardConfigItems } from './entities/UserDashboardConfigItems.entity';
+import { userDashboardConfig, userDashboardConfigItems } from './const';
 import { Auth } from '@/auth/entities/auth.entity';
 
 @Injectable()
@@ -15,8 +15,8 @@ export class UserService {
     @InjectRepository(UserDashboardConfig)
     private readonly userDashboardConfigRepository: Repository<UserDashboardConfig>,
 
-    @InjectRepository(UserDashboardConifgItems)
-    private readonly UserDashboardConifgItemsRepository: Repository<UserDashboardConifgItems>,
+    @InjectRepository(UserDashboardConfigItems)
+    private readonly userDashboardConfigItemsRepository: Repository<UserDashboardConfigItems>,
   ) {}
 
   /**
@@ -28,10 +28,8 @@ export class UserService {
   async getConfig(openid: string) {
     let config = await this.userDashboardConfigRepository.find({
       where: { auth: { openid } },
-      relations: ['userDashboardConifgItems', 'auth'],
+      relations: ['UserDashboardConfigItems', 'auth'],
     });
-
-    console.log(JSON.stringify(config, null, 2));
 
     if (!config.length) {
       config = await this.init(openid);
@@ -59,11 +57,11 @@ export class UserService {
           userDashboardConfigInstant,
         );
 
-        const userDashboardConifgItemsResults = userDashboardConifgItems[
+        const UserDashboardConfigItemsResults = userDashboardConfigItems[
           index
         ].map((iItem) => {
           const userDashboardConfigItemsInstant =
-            new UserDashboardConifgItems();
+            new UserDashboardConfigItems();
 
           userDashboardConfigItemsInstant.text = iItem.text;
           userDashboardConfigItemsInstant.priority = iItem.priority;
@@ -74,8 +72,8 @@ export class UserService {
           return userDashboardConfigItemsInstant;
         });
 
-        await this.UserDashboardConifgItemsRepository.save(
-          userDashboardConifgItemsResults,
+        await this.userDashboardConfigItemsRepository.save(
+          UserDashboardConfigItemsResults,
         );
 
         return userDashboardConfigInstant;
