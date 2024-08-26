@@ -1,26 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCommonDto } from './dto/create-common.dto';
-import { UpdateCommonDto } from './dto/update-common.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { randomInt } from 'crypto';
+import { Repository } from 'typeorm';
+
+import { UserDashboardConfig } from '@/user/entities/UserDashboardConfig.entity';
+import { DashboardOption, PrizesBg } from '@/user/enum';
 
 @Injectable()
 export class CommonService {
-  create(createCommonDto: CreateCommonDto) {
-    return 'This action adds a new common';
-  }
+  constructor(
+    @InjectRepository(UserDashboardConfig)
+    private readonly userDashboardConfigRepository: Repository<UserDashboardConfig>,
+  ) {}
 
-  findAll() {
-    return `This action returns all common`;
-  }
+  async getRandomUserDashboardConfigItems() {
+    const userDashboardConfigItems = (
+      await this.userDashboardConfigRepository.find({
+        where: { dashboard_option: DashboardOption.eat },
+        relations: {
+          user_dashboard_config_items: true,
+        },
+      })
+    )
+      .map(({ user_dashboard_config_items }) => user_dashboard_config_items)
+      .flat();
+    const totalCount = userDashboardConfigItems.length;
+    if (totalCount === 0) {
+      return [];
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} common`;
-  }
+    const randomIndexs: number[] = [];
+    while (randomIndexs.length < 6 && randomIndexs.length < totalCount) {
+      const randomIndex = randomInt(totalCount);
+      if (!randomIndexs.includes(randomIndex)) {
+        randomIndexs.push(randomIndex);
+      }
+    }
 
-  update(id: number, updateCommonDto: UpdateCommonDto) {
-    return `This action updates a #${id} common`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} common`;
+    return randomIndexs
+      .map((index) => userDashboardConfigItems[index])
+      .map((item, index) => ({
+        ...item,
+        background: index % 2 === 0 ? PrizesBg.odd : PrizesBg.even,
+      }));
   }
 }
