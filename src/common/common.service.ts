@@ -33,15 +33,24 @@ export class CommonService {
     while (randomIndexs.length < 6 && randomIndexs.length < totalCount) {
       const randomIndex = randomInt(totalCount);
       if (!randomIndexs.includes(randomIndex)) {
-        randomIndexs.push(randomIndex);
+        let flag = true;
+        for (let i = 0; i < randomIndexs.length; i++) {
+          if (
+            userDashboardConfigItems[randomIndexs[i]].text ===
+            userDashboardConfigItems[randomIndex].text
+          ) {
+            flag = false;
+          }
+        }
+        if (flag) {
+          randomIndexs.push(randomIndex);
+        }
       }
     }
 
-    return randomIndexs
-      .map((index) => userDashboardConfigItems[index])
-      .map((item, index) => ({
-        ...item,
-        background: index % 2 === 0 ? PrizesBg.odd : PrizesBg.even,
-      }));
+    return randomIndexs.map((rIndex, index) => ({
+      ...userDashboardConfigItems[rIndex],
+      background: index % 2 === 0 ? PrizesBg.odd : PrizesBg.even,
+    }));
   }
 }
