@@ -9,9 +9,9 @@ import { isProd } from '@/utils';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
-import { SearchModule } from './search/search.module';
 import { CommonModule } from './common/common.module';
+import { SearchModule } from './search/search.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
