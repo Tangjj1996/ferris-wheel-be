@@ -13,8 +13,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp(); // 获取请求上下文
     const response = ctx.getResponse<Response>(); // 获取请求上下文中的 response 对象
     const status = exception.getStatus?.() || HttpStatus.INTERNAL_SERVER_ERROR; // 获取异常状态码
+    if (!(exception instanceof HttpException)) {
+      response
+        .header('Content-Type', 'application/json; charset=utf-8')
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .send({
+          data: null,
+          code: HttpStatus.INTERNAL_SERVER_ERROR,
+          msg: '服务器错误',
+          traceId: new Date().toLocaleString(),
+        });
+      return;
+    }
     const exceptionResponse = exception.getResponse();
-
     const errorResponse = {
       data: null,
       code: exceptionResponse?.['code'] ?? exceptionResponse['statusCode'],
@@ -23,8 +34,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
 
     // 设置返回的状态码，请求头，发送错误信息
-    response.status(status);
-    response.header('Content-Type', 'application/json; charset=utf-8');
-    response.send(errorResponse);
+    response
+      .header('Content-Type', 'application/json; charset=utf-8')
+      .status(status)
+      .send(errorResponse);
   }
 }

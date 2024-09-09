@@ -89,5 +89,21 @@ export class UserService {
         HttpStatus.OK,
       );
     }
+    const {
+      dashboard_title,
+      dashboard_type,
+      dashboard_option,
+      user_dashboard_config_items,
+    } = collectionDto;
+
+    const entities = this.userDashboardConfigRepository.create({
+      auth: { openid },
+      dashboard_title,
+      dashboard_type,
+      dashboard_option,
+      user_dashboard_config_items,
+    });
+
+    await this.userDashboardConfigRepository.save(entities);
   }
 }
