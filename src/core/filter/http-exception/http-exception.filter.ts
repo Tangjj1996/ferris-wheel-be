@@ -22,8 +22,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       traceId: new Date().toLocaleString(),
     };
 
-    console.log('errorResponse:: ', errorResponse, exceptionResponse);
-
     // 设置返回的状态码，请求头，发送错误信息
     response.status(status);
     response.header('Content-Type', 'application/json; charset=utf-8');
