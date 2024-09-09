@@ -44,4 +44,9 @@ export class UserService {
 
     return transformConfig;
   }
+
+  /**
+   * 收藏功能
+   */
+  async saveCollection(openid: string) {}
 }
