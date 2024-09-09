@@ -15,18 +15,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus?.() || HttpStatus.INTERNAL_SERVER_ERROR; // 获取异常状态码
     const exceptionResponse = exception.getResponse();
 
-    // 设置错误信息
-    const message =
-      typeof exceptionResponse === 'object'
-        ? exceptionResponse['message']
-        : `${status > HttpStatus.INTERNAL_SERVER_ERROR ? 'Service error' : 'Client Error'}`;
-
     const errorResponse = {
       data: null,
-      code: status,
-      msg: message,
+      code: exceptionResponse?.['code'] ?? exceptionResponse['statusCode'],
+      msg: exceptionResponse?.['msg'] ?? exceptionResponse['message'],
       traceId: new Date().toLocaleString(),
     };
+
+    console.log('errorResponse:: ', errorResponse, exceptionResponse);
 
     // 设置返回的状态码，请求头，发送错误信息
     response.status(status);

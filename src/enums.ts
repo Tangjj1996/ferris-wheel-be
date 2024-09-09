@@ -10,4 +10,8 @@ export enum BizHttpStatus {
    * 用户未带上 openid
    */
   user_not_get_openid = 4002,
+  /**
+   * 转盘配置已存在
+   */
+  user_has_already_exist = 5001,
 }

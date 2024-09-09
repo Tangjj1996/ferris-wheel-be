@@ -1,6 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { isEqual } from 'lodash';
 import { Repository } from 'typeorm';
+
+import { BizHttpStatus } from '@/enums';
 
 import { CollectionDTO } from './DTO/Collection';
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
@@ -50,6 +53,41 @@ export class UserService {
    * 收藏功能
    */
   async saveCollection(openid: string, collectionDto: CollectionDTO) {
-    console.log(openid, collectionDto, '+++');
+    const userDashboardConfig = await this.userDashboardConfigRepository.find({
+      where: { auth: { openid } },
+      relations: {
+        user_dashboard_config_items: true,
+      },
+    });
+
+    const isExist = userDashboardConfig.some((item) => {
+      const {
+        dashboard_title,
+        dashboard_type,
+        dashboard_option,
+        user_dashboard_config_items,
+      } = item;
+      const composeItem = {
+        dashboard_title,
+        dashboard_type,
+        dashboard_option,
+        user_dashboard_config_items: user_dashboard_config_items.map(
+          ({ text, background, priority }) => ({ text, background, priority }),
+        ),
+      };
+
+      return isEqual(composeItem, collectionDto);
+    });
+
+    // 如果已存在则不需要收藏
+    if (isExist) {
+      throw new HttpException(
+        {
+          code: BizHttpStatus.user_has_already_exist,
+          msg: '转盘配置已存在，无须再次收藏',
+        },
+        HttpStatus.OK,
+      );
+    }
   }
 }
