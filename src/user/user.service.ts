@@ -7,6 +7,7 @@ import { BizHttpStatus } from '@/enums';
 
 import { CollectionDTO } from './DTO/Collection';
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
+import { UserDashboardConfigItems } from './entities/UserDashboardConfigItems.entity';
 import { DashboardType } from './enum';
 
 @Injectable()
@@ -14,6 +15,9 @@ export class UserService {
   constructor(
     @InjectRepository(UserDashboardConfig)
     private readonly userDashboardConfigRepository: Repository<UserDashboardConfig>,
+
+    @InjectRepository(UserDashboardConfigItems)
+    private readonly userDashboardConfigItemsRepository: Repository<UserDashboardConfigItems>,
   ) {}
 
   /**
@@ -96,14 +100,24 @@ export class UserService {
       user_dashboard_config_items,
     } = collectionDto;
 
-    const entities = this.userDashboardConfigRepository.create({
-      auth: { openid },
-      dashboard_title,
-      dashboard_type,
-      dashboard_option,
-      user_dashboard_config_items,
-    });
-
-    await this.userDashboardConfigRepository.save(entities);
+    const userDashboardConfigInstance =
+      this.userDashboardConfigRepository.create({
+        dashboard_title,
+        dashboard_type,
+        dashboard_option,
+      });
+    const items: UserDashboardConfigItems[] = [];
+    for (let i = 0; i < user_dashboard_config_items.length; i++) {
+      const configItem = this.userDashboardConfigItemsRepository.create({
+        text: user_dashboard_config_items[i].text,
+        priority: user_dashboard_config_items[i].priority,
+        background: user_dashboard_config_items[i].background,
+      });
+      items.push(
+        await this.userDashboardConfigItemsRepository.save(configItem),
+      );
+    }
+    userDashboardConfigInstance.user_dashboard_config_items = items;
+    await this.userDashboardConfigRepository.save(userDashboardConfigInstance);
   }
 }
