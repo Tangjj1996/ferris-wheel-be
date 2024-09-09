@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { CollectionDTO } from './DTO/Collection';
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
 import { DashboardType } from './enum';
 
@@ -48,5 +49,7 @@ export class UserService {
   /**
    * 收藏功能
    */
-  async saveCollection(openid: string) {}
+  async saveCollection(openid: string, collectionDto: CollectionDTO) {
+    console.log(openid, collectionDto, '+++');
+  }
 }

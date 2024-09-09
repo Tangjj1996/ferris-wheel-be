@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 
-import { Collection } from './DTO/Collection';
+import { CollectionDTO } from './DTO/Collection';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -23,8 +23,11 @@ export class UserController {
    * 收藏夹
    */
   @Post('collection')
-  async saveCollection(@Body() body: Collection, @Req() req: Request) {
+  async saveCollection(
+    @Body() collectionDto: CollectionDTO,
+    @Req() req: Request,
+  ) {
     const { openid } = req.headers || {};
-    return this.userService.saveCollection(openid as string);
+    return this.userService.saveCollection(openid as string, collectionDto);
   }
 }
