@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 
 import { BizHttpStatus } from '@/enums';
 
+import { Auth } from '../auth/entities/auth.entity';
 import { CollectionDTO } from './DTO/Collection';
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
 import { UserDashboardConfigItems } from './entities/UserDashboardConfigItems.entity';
@@ -18,6 +19,9 @@ export class UserService {
 
     @InjectRepository(UserDashboardConfigItems)
     private readonly userDashboardConfigItemsRepository: Repository<UserDashboardConfigItems>,
+
+    @InjectRepository(Auth)
+    private readonly authRepository: Repository<Auth>,
   ) {}
 
   /**
@@ -100,11 +104,14 @@ export class UserService {
       user_dashboard_config_items,
     } = collectionDto;
 
+    const auth = await this.authRepository.findOne({ where: { openid } });
+
     const userDashboardConfigInstance =
       this.userDashboardConfigRepository.create({
         dashboard_title,
         dashboard_type,
         dashboard_option,
+        auth,
       });
     const items: UserDashboardConfigItems[] = [];
     for (let i = 0; i < user_dashboard_config_items.length; i++) {
