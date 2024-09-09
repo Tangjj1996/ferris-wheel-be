@@ -53,4 +53,6 @@ export class CommonService {
       background: index % 2 === 0 ? PrizesBg.odd : PrizesBg.even,
     }));
   }
+
+  async getHotDashboardConfig() {}
 }

@@ -24,6 +24,6 @@ import { Auth } from './entities/auth.entity';
   ],
   controllers: [AuthController],
   providers: [AuthService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, AuthService],
 })
 export class AuthModule {}

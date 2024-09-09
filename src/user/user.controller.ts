@@ -1,32 +1,33 @@
-import {
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 
-import { BizHttpStatus } from '@/enums';
-
+import { CollectionDTO } from './DTO/Collection';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  /**
+   * 获取用户配置项
+   * @param req
+   * @returns
+   */
   @Get('config')
   async getConfig(@Req() req: Request) {
     const { openid } = req.headers || {};
-    if (!openid) {
-      throw new HttpException(
-        {
-          code: BizHttpStatus.user_not_get_openid,
-          msg: '用户 openid 不存在',
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
     return this.userService.getConfig(openid as string);
+  }
+
+  /***
+   * 收藏夹
+   */
+  @Post('collection')
+  async saveCollection(
+    @Body() collectionDto: CollectionDTO,
+    @Req() req: Request,
+  ) {
+    const { openid } = req.headers || {};
+    return this.userService.saveCollection(openid as string, collectionDto);
   }
 }
