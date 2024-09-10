@@ -11,8 +11,8 @@ export class CommonController {
     return await this.commonService.getRandomUserDashboardConfigItems();
   }
 
-  @Get('getHotDashboardConfig')
-  async getHotList() {
+  @Get('getHotConfig')
+  async getHotConfig() {
     return await this.commonService.getHotDashboardConfig();
   }
 }

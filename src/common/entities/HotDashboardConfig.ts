@@ -31,9 +31,12 @@ export class HotDashboardConfig {
   @Column({ type: 'enum', enum: DashboardOption })
   dashboard_option: DashboardOption;
 
+  @Column({ type: 'boolean', default: false })
+  is_hot: boolean;
+
   @OneToMany(
     () => HotDashboardConfigItems,
     (hotDashboardConfigItems) => hotDashboardConfigItems.hot_dashboard_config,
   )
-  hot_dashboard_config_itmes: HotDashboardConfigItems[];
+  hot_dashboard_config_items: HotDashboardConfigItems[];
 }

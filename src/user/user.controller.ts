@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 
-import { CollectionDTO } from './DTO/Collection';
+import { CollectionDTO } from './dto/Collection';
 import { UserService } from './user.service';
 
 @Controller('user')

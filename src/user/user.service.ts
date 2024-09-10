@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { BizHttpStatus } from '@/enums';
 
 import { Auth } from '../auth/entities/auth.entity';
-import { CollectionDTO } from './DTO/Collection';
+import { CollectionDTO } from './dto/Collection';
 import { UserDashboardConfig } from './entities/UserDashboardConfig.entity';
 import { UserDashboardConfigItems } from './entities/UserDashboardConfigItems.entity';
 import { DashboardType } from './enum';
