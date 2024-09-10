@@ -14,7 +14,7 @@ async function storeCommonConfig() {
   const app = await NestFactory.createApplicationContext(AppModule);
   const commonService = app.get(CommonService);
 
-  hotDashboardConfig.forEach(async (config, index) => {
+  for (const [index, config] of hotDashboardConfig.entries()) {
     const { dashboard_type, dashboard_option, dashboard_title } = config;
     const hotDashboardConfigEntities = new HotDashboardConfig();
 
@@ -39,7 +39,9 @@ async function storeCommonConfig() {
       hotDashboardConfigEntities,
       hotDashboardConfigItemsEntities,
     );
-  });
+  }
+
+  await app.close();
 }
 
 storeCommonConfig();
