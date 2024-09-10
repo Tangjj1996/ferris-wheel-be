@@ -35,5 +35,5 @@ export class HotDashboardConfig {
     () => HotDashboardConfigItems,
     (hotDashboardConfigItems) => hotDashboardConfigItems.hot_dashboard_config,
   )
-  hot_dashboard_config_itmes: HotDashboardConfigItems[];
+  hot_dashboard_config_items: HotDashboardConfigItems[];
 }

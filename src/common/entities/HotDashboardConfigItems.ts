@@ -31,7 +31,7 @@ export class HotDashboardConfigItems {
 
   @ManyToOne(
     () => HotDashboardConfig,
-    (hotDashboardConfig) => hotDashboardConfig.hot_dashboard_config_itmes,
+    (hotDashboardConfig) => hotDashboardConfig.hot_dashboard_config_items,
   )
   hot_dashboard_config: HotDashboardConfig;
 }

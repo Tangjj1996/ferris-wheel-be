@@ -6,11 +6,17 @@ import { Repository } from 'typeorm';
 import { UserDashboardConfig } from '@/user/entities/UserDashboardConfig.entity';
 import { DashboardOption, PrizesBg } from '@/user/enum';
 
+import { HotDashboardConfig } from './entities/HotDashboardConfig';
+import { HotDashboardConfigItems } from './entities/HotDashboardConfigItems';
+
 @Injectable()
 export class CommonService {
   constructor(
     @InjectRepository(UserDashboardConfig)
     private readonly userDashboardConfigRepository: Repository<UserDashboardConfig>,
+
+    @InjectRepository(HotDashboardConfig)
+    private readonly hotDashboardConfigRepository: Repository<HotDashboardConfig>,
   ) {}
 
   async getRandomUserDashboardConfigItems() {
@@ -54,5 +60,27 @@ export class CommonService {
     }));
   }
 
-  async getHotDashboardConfig() {}
+  async saveHotDashboardConfig(
+    hotDashboardConfig: HotDashboardConfig,
+    hotDashboardConfigItems: HotDashboardConfigItems[],
+  ) {
+    return this.hotDashboardConfigRepository.manager.transaction(
+      async (transactionalEntityManager) => {
+        // Save hotDashboardConfigItems first
+        const savedItems = await transactionalEntityManager.save(
+          HotDashboardConfigItems,
+          hotDashboardConfigItems,
+        );
+
+        // Associate hotDashboardConfig with saved hotDashboardConfigItems
+        hotDashboardConfig.hot_dashboard_config_items = savedItems;
+
+        // Save hotDashboardConfig with associated items
+        return await transactionalEntityManager.save(
+          HotDashboardConfig,
+          hotDashboardConfig,
+        );
+      },
+    );
+  }
 }
