@@ -83,4 +83,12 @@ export class CommonService {
       },
     );
   }
+
+  async getHotDashboardConfig() {
+    return await this.hotDashboardConfigRepository.find({
+      relations: {
+        hot_dashboard_config_items: true,
+      },
+    });
+  }
 }
