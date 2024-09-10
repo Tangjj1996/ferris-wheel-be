@@ -3,11 +3,10 @@
  */
 import { NestFactory } from '@nestjs/core';
 
-import { AppModule } from '@/app.module';
-import { CommonService } from '@/common/common.service';
-import { HotDashboardConfig } from '@/common/entities/HotDashboardConfig';
-import { HotDashboardConfigItems } from '@/common/entities/HotDashboardConfigItems';
-
+import { AppModule } from '../../app.module';
+import { CommonService } from '../../common/common.service';
+import { HotDashboardConfig } from '../../common/entities/HotDashboardConfig';
+import { HotDashboardConfigItems } from '../../common/entities/HotDashboardConfigItems';
 import { hotDashboardConfig, hotDashboardConfigItems } from './const';
 
 async function storeCommonConfig() {
