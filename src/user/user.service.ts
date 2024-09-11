@@ -92,7 +92,7 @@ export class UserService {
       throw new HttpException(
         {
           code: BizHttpStatus.user_has_already_exist,
-          msg: '转盘配置已存在，无须再次收藏',
+          msg: '收藏已存在',
         },
         HttpStatus.OK,
       );
