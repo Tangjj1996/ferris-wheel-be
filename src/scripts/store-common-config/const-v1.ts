@@ -1,4 +1,9 @@
 /**
+ * 增加配置
+ * 1. 今天做什么运动
+ * 2. 今天穿什么衣服
+ */
+/**
  * 初始化配置
  */
 import { HotDashboardConfig } from '@/common/entities/HotDashboardConfig';
@@ -7,7 +12,7 @@ import { DashboardOption, DashboardType, PrizesBg } from '@/user/enum';
 
 export const hotDashboardConfig: Partial<HotDashboardConfig>[] = [
   {
-    dashboard_title: '早餐吃什么',
+    dashboard_title: '今天做什么运动',
     dashboard_type: DashboardType.wheel,
     dashboard_option: DashboardOption.eat,
   },
