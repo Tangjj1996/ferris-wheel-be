@@ -127,4 +127,31 @@ export class UserService {
     userDashboardConfigInstance.user_dashboard_config_items = items;
     await this.userDashboardConfigRepository.save(userDashboardConfigInstance);
   }
+
+  /**
+   * 删除收藏
+   */
+  async deleteCollection(openid: string, key: string) {
+    const userDashboardConfigInstance =
+      await this.userDashboardConfigRepository.find({
+        where: { auth: { openid }, key },
+        relations: {
+          user_dashboard_config_items: true,
+        },
+      });
+
+    if (!userDashboardConfigInstance) {
+      throw new HttpException(
+        {
+          code: BizHttpStatus.user_has_already_exist,
+          msg: '收藏不存在',
+        },
+        HttpStatus.OK,
+      );
+    }
+
+    await this.userDashboardConfigRepository.remove(
+      userDashboardConfigInstance,
+    );
+  }
 }

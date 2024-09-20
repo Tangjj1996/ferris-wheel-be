@@ -15,7 +15,7 @@ export class TransformInterceptor implements NestInterceptor {
         data,
         code: HttpStatus.OK,
         msg: 'ok',
-        traceId: '222',
+        traceId: new Date().toLocaleString(),
       })),
     );
   }
