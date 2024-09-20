@@ -30,4 +30,10 @@ export class UserController {
     const { openid } = req.headers || {};
     return this.userService.saveCollection(openid as string, collectionDto);
   }
+
+  @Post('deleteCollection')
+  async deleteCollection(@Body('key') key: string, @Req() req: Request) {
+    const { openid } = req.headers || {};
+    return this.userService.deleteCollection(openid as string, key);
+  }
 }
